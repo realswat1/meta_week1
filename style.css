@@ -78,6 +78,7 @@
     outline: none;
     flex: 1;
     font-size: 14px;
+    color: #fff;
   }
   
   .movies-grid {
@@ -95,6 +96,11 @@
     overflow: hidden;
   }
   
+  .movie:hover {
+    transform: scale(1.09);
+    background: bisque;
+
+  }
   .movie img {
     width: 100%;
     max-height: 300px;
@@ -124,7 +130,7 @@
   
   .loadmorebtn {
     background: #000;
-    color: #fff;
+    color:red;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -138,7 +144,7 @@
   }
   
   .exit {
-    background: transparent;
+    background: white;
     font-weight: bolder;
     border: none;
     font-size: 1.5rem;
@@ -179,7 +185,7 @@
     }
   
     /* Added CSS for small screens */
-    .navbar {
+    .NAVIGATION {
       flex-direction: column;
       align-items: flex-start;
       padding: 1rem;

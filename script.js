@@ -6,6 +6,9 @@ const imageUrl = 'https://image.tmdb.org/t/p/w500';
 const exitbutton = document.getElementById('exitbtn');
 const searchInput = document.getElementById('search-input');
 const loadmore = document.getElementById('load-more-movies-btn');
+const popUpContainer = document.getElementById('pop-up-container');
+const popUp = document.getElementById('pop-up');
+const trailerDiv = document.getElementById('trailerdiv');
 searchInput.addEventListener('keyup', handleSearch);
 exitbutton.addEventListener('click', getPopularMovies);
 var pages = 1;
@@ -26,6 +29,7 @@ async function fetchMovies(endpoint) {
 }
 
 async function getPopularMovies() {
+  loadmore.classList.remove('hidden');
   searchInput.value = '';
   const endpoint = `${baseUrl}/movie/popular?api_key=${apiKey}`;
   moviesGrid.innerHTML = '';
@@ -35,7 +39,8 @@ async function getPopularMovies() {
 
   popularMovies.forEach((movie) => {
     const movieContainer = document.createElement('div');
-    movieContainer.classList.add('movie');
+    movieContainer.classList.add('movie-card');
+    movieContainer.id = movie.id;
 
     const image = document.createElement('img');
     if (movie.poster_path === null) {
@@ -44,7 +49,8 @@ async function getPopularMovies() {
       image.src = imageUrl + movie.poster_path;
     }
     image.alt = 'Movie Poster';
-    image.id - 'movie-poster';
+    image.id = 'movie-poster';
+    image.classList.add('movie-poster');
     movieContainer.appendChild(image);
 
     const title = document.createElement('h3');
@@ -55,17 +61,20 @@ async function getPopularMovies() {
 
     const votes = document.createElement('p');
     votes.classList.add('votes');
-    votes.textContent = `Votes: ${movie.vote_average}`;
+    votes.textContent = `Votes: ${movie.vote_average} ⭐️`;
     votes.id = 'movie-votes';
     movieContainer.appendChild(votes);
 
     moviesGrid.appendChild(movieContainer);
+    //const popupexit = document.getElementById('exitpopbtn');
+    //popupexit.addEventListener('click', getPopularMovies);
   });
+  await selectMovies();
 }
 
 getPopularMovies();
 
-function handleSearch(event) {
+async function handleSearch(event) {
   if (event.key === 'Enter') {
     const query = event.target.value;
     if (query === '') {
@@ -75,18 +84,20 @@ function handleSearch(event) {
     exitbutton.classList.remove('hidden');
     loadmore.classList.add('hidden');
 
-    moviesGrid.innerHTML = '';
-
     fetch(
       `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`
     )
       .then((response) => response.json())
-      .then((data) => {
+      .then(async (data) => {
+        // Make the callback function async
+        moviesGrid.innerHTML = '';
         // Process the search results
         const movies = data.results;
-        movies.forEach((movie) => {
+        for (const movie of movies) {
+          // Use a for loop instead of forEach to support async/await
           const movieContainer = document.createElement('div');
-          movieContainer.classList.add('movie');
+          movieContainer.classList.add('movie-card');
+          movieContainer.id = movie.id;
 
           const image = document.createElement('img');
           if (movie.poster_path === null) {
@@ -96,7 +107,7 @@ function handleSearch(event) {
             image.src = imageUrl + movie.poster_path;
           }
           image.alt = 'Movie Poster';
-          image.id - 'movie-poster';
+          image.id = 'movie-poster';
           movieContainer.appendChild(image);
 
           const title = document.createElement('h3');
@@ -112,7 +123,8 @@ function handleSearch(event) {
           movieContainer.appendChild(votes);
 
           moviesGrid.appendChild(movieContainer);
-        });
+        }
+        await selectMovies(); // Wait for selectMovies() to finish before continuing
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -135,7 +147,8 @@ loadmore.addEventListener('click', async (event) => {
 
     movies.forEach((movie) => {
       const movieContainer = document.createElement('div');
-      movieContainer.classList.add('movie');
+      movieContainer.classList.add('movie-card');
+      movieContainer.id = movie.id;
 
       const image = document.createElement('img');
       if (movie.poster_path === null) {
@@ -144,7 +157,7 @@ loadmore.addEventListener('click', async (event) => {
         image.src = imageUrl + movie.poster_path;
       }
       image.alt = 'Movie Poster';
-      image.id - 'movie-poster';
+      image.id = 'movie-poster';
       movieContainer.appendChild(image);
 
       const title = document.createElement('h3');
@@ -164,5 +177,64 @@ loadmore.addEventListener('click', async (event) => {
   } catch (error) {
     console.log(error);
   }
-  console.log('Button clicked!');
+  await selectMovies();
 });
+
+async function selectMovies() {
+  const movieCards = document.querySelectorAll('.movies-grid .movie-card');
+
+  movieCards.forEach((movieCont) => {
+    movieCont.onclick = async () => {
+      document.querySelector('.pop-up-container').style.display = 'block';
+      console.log(movieCont);
+      const id = movieCont.getAttribute('id');
+
+      try {
+        const videosResponse = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${apiKey}`
+        );
+        const videosData = await videosResponse.json();
+        const videos = videosData.results;
+
+        var video = '';
+        if (videos.length > 0) {
+          video = videos[0].key;
+        } else {
+          video = 'dQw4w9WgXcQ';
+        }
+
+        const detailsResponse = await fetch(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`
+        );
+        const details = await detailsResponse.json();
+        console.log(details);
+
+        const iframe = document.createElement('iframe');
+        iframe.width = '560';
+        iframe.height = '315';
+        iframe.src = `https://www.youtube.com/embed/${video}`;
+        iframe.title = 'YouTube video player';
+        iframe.frameBorder = '0';
+        iframe.allow =
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+
+        const detailsDiv = document.createElement('div');
+        detailsDiv.classList.add('detailsDiv');
+        detailsDiv.innerHTML = `<div class="movietitle">${details.title}</div><div class="description">${details.overview}</div><div>${details.vote_average}</div>`;
+
+        const popUp = document.querySelector('.pop-up');
+        popUp.innerHTML = '';
+        popUp.appendChild(iframe);
+        popUp.appendChild(detailsDiv);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+  });
+
+  const closeButton = document.querySelector('.pop-up-container span');
+  closeButton.onclick = () => {
+    document.querySelector('.pop-up-container').style.display = 'none';
+  };
+}

@@ -6,36 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flixter</title>
     <link rel="stylesheet" href="style.css" />
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-    <!-- NAVIGATION -->
-    <heaeder>
+      <!-- Navbar -->
+      <header>
         <div class="NAVIGATION">
-            <div class="webtitle">FLIXTER</div>
-                <div class="searchbar">
-                <img src="icons/search.png" alt="" class="searchicon" />
-                <input type="text" placeholder="search" id="search-input" />
-                </div>
-            </div>
-    </heaeder>
-    <!-- Spectacular -->
-    <!-- Showing movies -->
-    <button class="exit hidden" id="exitbtn">Go back to popular movies</button>
-    <div id="movies-grid" class="movies-grid">
-      <!-- Add more movie elements as needed -->
-    </div>
-    <div class="pop-up-container" id="pop-up-container">
-      <div class="pop-up" id="pop-up">
-        <div id="trailerdiv"><p>Movie trailer</p></div>
-      </div>
-    </div>
-    <div class="button-container">
-      <button id="load-more-movies-btn" class="loadmorebtn">
-        Load more movies
+          <div class="webtitle">FLIXTER</div>
+          <div class="searchbar">
+            <img src="icons/search.png" alt="" class="searchicon" />
+            <input type="text" placeholder="Search" id="search-input" />
+          </div>
+        </div>
+      </header>
+      <!-- Spectacular -->
+      <!-- Showing movies -->
+
+      <button class="exit hidden" id="exitbtn">
+        Go back to popular movies
       </button>
+      <div id="movies-grid" class="movies-grid">
+        <!-- Add more movie elements as needed -->
+      </div>
+      <div class="button-container">
+        <button id="load-more-movies-btn" class="loadmorebtn">
+          Load more movies
+        </button>
+      </div>
+      <div class="pop-up-container" id="pop-up-container">
+        <div class="pop-up" id="pop-up">
+          <div id="trailerdiv"><p>Movie trailer</p></div>
+        </div>
+        <span>&times;</span>
+      </div>
+      <script src="script.js"></script>
     </div>
-    <script src="script.js"></script>
-</div>
   </body>
 </html>

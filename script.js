@@ -160,7 +160,7 @@ loadmore.addEventListener('click', async (event) => {
       image.id = 'movie-poster';
       movieContainer.appendChild(image);
 
-      const title = document.createElement('h3');
+      const title = document.createElement('h4');
       title.classList.add('title');
       title.textContent = movie.title;
       title.id = 'movie-title';

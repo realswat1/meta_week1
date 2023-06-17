@@ -211,7 +211,7 @@
 }
 
 @media (max-width: 768px) {
-  .navbar {
+  .NAVIGATION {
     height: 120px;
   }
 
@@ -233,7 +233,6 @@
     font-size: 2rem;
   }
 
-  /* Added CSS for small screens */
   .NAVIGATION {
     flex-direction: column;
     align-items: flex-start;
@@ -247,6 +246,10 @@
 
   .option {
     width: 100%;
+  }
+  .votes {
+    font-size: 14px;
+    color: goldenrod;
   }
 }
 
